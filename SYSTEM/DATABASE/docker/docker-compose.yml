@@ -1,0 +1,101 @@
+services:
+
+  postgres-identity:
+    container_name: cencom-postgres-identity
+    environment:
+      POSTGRES_DB: cencom_identity
+      POSTGRES_PASSWORD: CENCOM_DB_ChangeMe_2026
+      POSTGRES_USER: cencom_admin
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U cencom_admin -d cencom_identity
+      timeout: 5s
+      interval: 10s
+      retries: 5
+    image: postgres:17
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 5432
+        published: "5433"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: D:/CENCOM/SYSTEM/IDENTITY/database
+        target: /var/lib/postgresql/data
+        bind: {}
+
+  postgres-audit:
+    image: postgres:17
+    container_name: cencom-postgres-audit
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: cencom_audit
+      POSTGRES_PASSWORD: CENCOM_AUDIT_CHANGE_ME
+      POSTGRES_DB: CENCOM_AUDIT
+    ports:
+      - "5434:5432"
+    volumes:
+      - "D:/CENCOM/SYSTEM/AUDIT/database:/var/lib/postgresql/data"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cencom_audit -d CENCOM_AUDIT"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres-portal:
+    image: postgres:17
+    container_name: cencom-postgres-portal
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: cencom_portal
+      POSTGRES_PASSWORD: CENCOM_PORTAL_CHANGE_ME
+      POSTGRES_DB: CENCOM_PORTAL
+    ports:
+      - "5435:5432"
+    volumes:
+      - "D:/CENCOM/SYSTEM/PORTAL/database:/var/lib/postgresql/data"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cencom_portal -d CENCOM_PORTAL"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres-quantrinhansu:
+    image: postgres:17
+    container_name: cencom-postgres-quantrinhansu
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: cencom_hr
+      POSTGRES_PASSWORD: CENCOM_HR_CHANGE_ME
+      POSTGRES_DB: CENCOM_QUANTRINHANSU
+    ports:
+      - "5436:5432"
+    volumes:
+      - "D:/CENCOM/QUANTRINHANSU/database:/var/lib/postgresql/data"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cencom_hr -d CENCOM_QUANTRINHANSU"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres-xuongsuachua:
+    image: postgres:17
+    container_name: cencom-postgres-xuongsuachua
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: cencom_xuong
+      POSTGRES_PASSWORD: CENCOM_XUONG_CHANGE_ME
+      POSTGRES_DB: CENCOM_XUONGSUACHUA
+    ports:
+      - "5437:5432"
+    volumes:
+      - "D:/CENCOM/XUONGSUACHUA/database:/var/lib/postgresql/data"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cencom_xuong -d CENCOM_XUONGSUACHUA"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
